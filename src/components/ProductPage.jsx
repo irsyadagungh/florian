@@ -1,12 +1,19 @@
 import Card from "./Card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addProduct } from "../redux/CreateSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./ProductPage.css";
 
 const ProductPage = ({ products }) => {
   const dispatch = useDispatch();
   const [disableProduct, setDisableProduct] = useState([]);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  useEffect(() => {
+    // Mengupdate disableProduct berdasarkan produk yang sudah ada di keranjang
+    const disableIds = cartItems.map((item) => item.id);
+    setDisableProduct(disableIds);
+  }, [cartItems]);
 
   const handleAddProduct = (product) => {
     dispatch(addProduct(product));
@@ -52,6 +59,9 @@ const ProductPage = ({ products }) => {
                 product={product}
                 addProduct={() => handleAddProduct(product)}
                 disabled={disableProduct.includes(product.id)}
+                classDisabled={
+                  disableProduct.includes(product.id) ? "disabled" : ""
+                }
               />
             ))}
         </div>
@@ -85,6 +95,9 @@ const ProductPage = ({ products }) => {
                 product={product}
                 addProduct={() => handleAddProduct(product)}
                 disabled={disableProduct.includes(product.id)}
+                classDisabled={
+                  disableProduct.includes(product.id) ? "disabled" : ""
+                }
               />
             ))}
         </div>
@@ -118,7 +131,9 @@ const ProductPage = ({ products }) => {
                 product={product}
                 addProduct={() => handleAddProduct(product)}
                 disabled={disableProduct.includes(product.id)}
-                classDisabled={disableProduct.includes(product.id) ? "disabled" : ""}
+                classDisabled={
+                  disableProduct.includes(product.id) ? "disabled" : ""
+                }
               />
             ))}
         </div>
